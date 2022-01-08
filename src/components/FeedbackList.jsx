@@ -1,11 +1,14 @@
 import FeedbackItem from './FeedbackItem'
 
 function FeedbackList({ feedback }) {
-  console.log(feedback)
+  if (!feedback || feedback.length === 0) {
+    return <p></p>
+  }
+
   return (
-    <div>
-      {feedback.map((comment, index) => (
-        <FeedbackItem key={index} rating={comment.rating} text={comment.text} />
+    <div className='feedback-list'>
+      {feedback.map((item) => (
+        <FeedbackItem key={item.id} item={item} />
       ))}
     </div>
   )
