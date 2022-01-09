@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <Header text='Hello, world' />
+      <Header />
       <div className='container'>
         <FeedbackList feedback={feedback} />
       </div>
