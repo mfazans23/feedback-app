@@ -15,39 +15,31 @@ export const FeedbackProvider = ({ children }) => {
 
   // Fetch feedback data
   const fetchFeedback = async () => {
-    setTimeout(async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/feedback?_sort=id&_order=desc`
-        )
-        const data = await response.json()
-        setFeedback(data)
-        setIsLoading(false)
-      } catch (error) {
-        console.error()
-      }
-    }, 600)
+    const response = await fetch(`/feedback?_sort=id&_order=desc`)
+    const data = await response.json()
+    setFeedback(data)
+    setIsLoading(false)
   }
 
   // Add New Feedback
   const addFeedback = async (newFeedback) => {
-    try {
-      const response = await fetch(`http://localhost:5000/feedback`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newFeedback),
-      })
-      const data = await response.json()
-      setFeedback([data, ...feedback])
-    } catch (error) {
-      console.log(error)
-    }
-    // setFeedback([data, ...feedback])
+    const response = await fetch(`/feedback`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newFeedback),
+    })
+
+    const data = await response.json()
+
+    setFeedback([data, ...feedback])
   }
   // Delete Feedback
-  const deleteFeedback = (id) => {
+  const deleteFeedback = async (id) => {
+    await fetch(`/feedback/${id}`, {
+      method: 'DELETE',
+    })
     setFeedback(feedback.filter((item) => item.id !== id))
   }
   // Set item to be updated
@@ -58,10 +50,19 @@ export const FeedbackProvider = ({ children }) => {
     })
   }
   // Update feedback
-  const updateFeedback = (id, updItem) => {
+  const updateFeedback = async (id, updItem) => {
+    const response = await fetch(`/feedback/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updItem),
+    })
+    const data = await response.json()
     setFeedback(
-      feedback.map((item) => (item.id === id ? { ...item, ...updItem } : item))
+      feedback.map((item) => (item.id === id ? { ...item, ...data } : item))
     )
+
     setFeedbackEdit({
       item: {},
       edit: false,
